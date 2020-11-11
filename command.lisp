@@ -607,7 +607,7 @@ know lisp very well. One might put the following in one's rc file:
         (eval-command i)))
 
 (defcommand colon (&optional initial-input) (:rest)
-  "Read a command from the user. @var{initial-text} is optional. When
+  "Read a command from the user. @var{initial-input} is optional. When
 supplied, the text will appear in the prompt.
 
 String arguments with spaces may be passed to the command by
