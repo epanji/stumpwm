@@ -606,8 +606,11 @@ policy of GROUP"
   ;; Add a window to a dynamic group, on a specific head. This should only be
   ;; called with a dynamic group and dynamic window. 
   (if (dynamic-group-head-full-p group head)
-      (progn (message "Head ~A in group ~A is full" head group)
-             (handle-head-overflow group head window))
+      (let ((number (frame-number (tile-group-current-frame group))))
+        (message "Head ~A in group ~A is full" head group)
+        ;; Handling overflow will change current frame
+        (handle-head-overflow group head window)
+        (focus-frame group (frame-by-number group number)))
       (dynamic-group-place-window group head window))
   ;; The LOOP and WHEN forms here could maybe be removed...? I think the syncing
   ;; of the frame windows is done by synchronize-frames-and-windows
@@ -619,6 +622,9 @@ policy of GROUP"
   (when (null (frame-window (window-frame window)))
     (frame-raise-window (window-group window) (window-frame window)
                         window nil)))
+
+(defmethod group-lost-focus ((group dynamic-group))
+  (message "Focus in group ~A has been lost" group))
 
 (labels
     ((initialize-group-head-master-stack-split (group head)
